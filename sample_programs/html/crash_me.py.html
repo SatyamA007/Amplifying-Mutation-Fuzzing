@@ -1,0 +1,201 @@
+<html><body><h1>crash_me.py</h1>Killed 3 out of 24 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 1</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,5 +1,5 @@
+ def crash_me(s: str) -> None:
+-    if len(s) > 0 and s[0] == 'b':
++    if len(s) >= 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+</pre><h3>Mutant 2</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,5 +1,5 @@
+ def crash_me(s: str) -> None:
+-    if len(s) > 0 and s[0] == 'b':
++    if len(s) > 1 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+</pre><h3>Mutant 3</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,5 +1,5 @@
+ def crash_me(s: str) -> None:
+-    if len(s) > 0 and s[0] == 'b':
++    if len(s) > 0 and s[1] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+</pre><h3>Mutant 4</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,5 +1,5 @@
+ def crash_me(s: str) -> None:
+-    if len(s) > 0 and s[0] == 'b':
++    if len(s) > 0 and s[0] != 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+</pre><h3>Mutant 5</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,5 +1,5 @@
+ def crash_me(s: str) -> None:
+-    if len(s) > 0 and s[0] == 'b':
++    if len(s) > 0 and s[0] == 'XXbXX':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+</pre><h3>Mutant 6</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,5 +1,5 @@
+ def crash_me(s: str) -> None:
+-    if len(s) > 0 and s[0] == 'b':
++    if len(s) > 0 or s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+</pre><h3>Mutant 7</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+-        if len(s) > 1 and s[1] == 'a':
++        if len(s) >= 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 8</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+-        if len(s) > 1 and s[1] == 'a':
++        if len(s) > 2 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 9</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+-        if len(s) > 1 and s[1] == 'a':
++        if len(s) > 1 and s[2] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 10</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+-        if len(s) > 1 and s[1] == 'a':
++        if len(s) > 1 and s[1] != 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 11</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+-        if len(s) > 1 and s[1] == 'a':
++        if len(s) > 1 and s[1] == 'XXaXX':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 12</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+-        if len(s) > 1 and s[1] == 'a':
++        if len(s) > 1 or s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 13</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+-            if len(s) > 2 and s[2] == 'd':
++            if len(s) >= 2 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 14</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+-            if len(s) > 2 and s[2] == 'd':
++            if len(s) > 3 and s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 16</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+-            if len(s) > 2 and s[2] == 'd':
++            if len(s) > 2 and s[2] != 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 17</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+-            if len(s) > 2 and s[2] == 'd':
++            if len(s) > 2 and s[2] == 'XXdXX':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 18</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -1,6 +1,6 @@
+ def crash_me(s: str) -> None:
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+-            if len(s) > 2 and s[2] == 'd':
++            if len(s) > 2 or s[2] == 'd':
+                 if len(s) > 3 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 20</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -2,5 +2,5 @@
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+-                if len(s) > 3 and s[3] == '!':
++                if len(s) > 4 and s[3] == '!':
+                     raise Exception()
+</pre><h3>Mutant 21</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -2,5 +2,5 @@
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+-                if len(s) > 3 and s[3] == '!':
++                if len(s) > 3 and s[4] == '!':
+                     raise Exception()
+</pre><h3>Mutant 22</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -2,5 +2,5 @@
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+-                if len(s) > 3 and s[3] == '!':
++                if len(s) > 3 and s[3] != '!':
+                     raise Exception()
+</pre><h3>Mutant 23</h3><pre>--- crash_me.py
++++ crash_me.py
+@@ -2,5 +2,5 @@
+     if len(s) > 0 and s[0] == 'b':
+         if len(s) > 1 and s[1] == 'a':
+             if len(s) > 2 and s[2] == 'd':
+-                if len(s) > 3 and s[3] == '!':
++                if len(s) > 3 and s[3] == 'XX!XX':
+                     raise Exception()
+</pre></body></html>
