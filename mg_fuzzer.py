@@ -1,9 +1,9 @@
 import time
 
 from typing import Tuple, List, Callable, Set, Any
-from fuzzingbook.GreyboxFuzzer import Mutator, Seed, Sequence, FunctionRunner, AdvancedMutationFuzzer, AFLFastSchedule 
+from fuzzingbook.GreyboxFuzzer import Mutator, Seed, Sequence, AdvancedMutationFuzzer, AFLFastSchedule 
 from fuzzingbook.MutationFuzzer import FunctionRunner
-from fuzzingbook.Coverage import Coverage, FunctionRunner
+from fuzzingbook.Coverage import Coverage
 from utils import *
 from sample_programs.crash_me import crash_me
 

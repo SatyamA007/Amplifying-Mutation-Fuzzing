@@ -23,6 +23,7 @@ def run_program(filename, s):
             return True
     except:
         return False
+    return False
 
 def get_mutation_score(data):
     total = len(os.listdir(directory))
