@@ -1,29 +1,33 @@
+import sys
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sample_programs.crash_me import crash_me
 from fuzzingbook.GreyboxFuzzer import Mutator
 from fuzzingbook.GreyboxFuzzer import FunctionCoverageRunner
 from fuzzingbook.GreyboxFuzzer import AFLFastSchedule
 from fuzzingbook.GreyboxFuzzer import CountingGreyboxFuzzer
 from fuzzingbook.Coverage import population_coverage
+from utils import *
 
 if __name__ == "__main__":
-        
-    n = 50000
+    program_num = '1'
+    if len(sys.argv)>1:
+        program_num = str(sys.argv[1])
+                
+    n = 10000
     seed_input = "good"
     fast_schedule = AFLFastSchedule(5)
     fast_fuzzer = CountingGreyboxFuzzer([seed_input], Mutator(), fast_schedule)
     start = time.time()
-    fast_fuzzer.runs(FunctionCoverageRunner(crash_me), trials=n)
+    fast_fuzzer.runs(FunctionCoverageRunner(programs[program_num]['function']), trials=n)
     end = time.time()
 
     x_axis = np.arange(len(fast_schedule.path_frequency))
     y_axis = list(fast_schedule.path_frequency.values())
 
     time_taken = end - start
-    _, boost_coverage = population_coverage(fast_fuzzer.inputs, crash_me)
+    _, boost_coverage = population_coverage(fast_fuzzer.inputs, programs[program_num]['function'])
     boosted_max_coverage = max(boost_coverage)
     print(f"The boosted fuzzer took {time_taken}s for a total coverage of {boosted_max_coverage}")
 

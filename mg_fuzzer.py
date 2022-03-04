@@ -1,3 +1,4 @@
+import sys
 import time
 
 from typing import Tuple, List, Callable, Set, Any
@@ -5,16 +6,20 @@ from fuzzingbook.GreyboxFuzzer import Mutator, Seed, Sequence, CountingGreyboxFu
 from fuzzingbook.MutationFuzzer import FunctionRunner
 from fuzzingbook.Coverage import Coverage
 from utils import *
-from sample_programs.crash_me import crash_me
 
 class FunctionMutantsRunner(FunctionRunner):
+    def __init__(self, function: Callable, program_num:str = '1') -> None:
+        """Initialize.  `function` is a function to be executed"""
+        self.function = function
+        self.program_num = program_num
+
     def run_function(self, inp: str) -> Any:
         try:
             result = super().run_function(inp)
         except Exception as exc:
             raise exc
 
-        self._coverage = run_mutants(inp)
+        self._coverage = run_mutants(inp,self.program_num)
         return result
 
     def coverage(self) -> Set[int]:
@@ -48,12 +53,15 @@ class Mutation_GreyboxFuzzer(CountingGreyboxFuzzer):
         return(result, outcome)
 
 if __name__ == "__main__":
+    program_num = '1'
+    if len(sys.argv)>1:
+        program_num = str(sys.argv[1])
+
     n = 10000
-    seed_input = "good"
     mutant_analysis_schedule = MutationAnalysisSchedule(5)
-    mutant_fuzzer = Mutation_GreyboxFuzzer([seed_input], Mutator(), mutant_analysis_schedule)
+    mutant_fuzzer = Mutation_GreyboxFuzzer(programs[program_num]['seeds'], Mutator(), mutant_analysis_schedule)
     start = time.time()
-    mutant_fuzzer.runs(FunctionMutantsRunner(crash_me), trials=n)
+    mutant_fuzzer.runs(FunctionMutantsRunner(programs[program_num]['function'], program_num), trials=n)
     end = time.time()
 
     print(mutant_fuzzer.population)

@@ -1,3 +1,4 @@
+import sys
 import time
 
 from typing import Dict, Tuple, List, Callable, Set, Any
@@ -6,7 +7,7 @@ from fuzzingbook.MutationFuzzer import FunctionRunner
 from fuzzingbook.Fuzzer import Runner
 from fuzzingbook.Coverage import Coverage
 from utils import *
-from sample_programs.crash_me import crash_me
+from sample_programs.crash_me.crash_me import crash_me
 
 class Seed_with_mutants(Seed):
      def __init__(self, data: str) -> None:
@@ -17,6 +18,11 @@ class Seed_with_mutants(Seed):
         self.energy = 0.0
 
 class FunctionMLRunner(FunctionRunner):
+    def __init__(self, function: Callable, program_num:str = '1') -> None:
+        """Initialize.  `function` is a function to be executed"""
+        self.function = function
+        self.program_num = program_num
+
     def run_function(self, inp: str) -> Any:
         with Coverage() as cov:
             try:
@@ -31,7 +37,7 @@ class FunctionMLRunner(FunctionRunner):
             raise exc
         
         self._coverage = cov.coverage()
-        self._mutantsCovered = run_mutants(inp)
+        self._mutantsCovered = run_mutants(inp,self.program_num)
         return result
 
     def coverage(self):
@@ -81,10 +87,6 @@ class ML_GreyboxFuzzer(CountingGreyboxFuzzer):
         return(result, outcome)
 
     def super_run(self, runner: FunctionMLRunner) -> Tuple[Any, str]: 
-        """Run function(inp) while tracking coverage.
-           If we reach new coverage,
-           add inp to population and its coverage to population_coverage
-        """
         result, outcome = runner.run(self.fuzz())
 
         new_coverage = frozenset(runner.coverage()[0])
@@ -103,12 +105,15 @@ class ML_GreyboxFuzzer(CountingGreyboxFuzzer):
 
 
 if __name__ == "__main__":
+    program_num = '1'
+    if len(sys.argv)>1:
+        program_num = str(sys.argv[1])
+
     n = 10000
-    seed_input = "good"
     ml_schedule = MLSchedule(5,5)
-    ml_fuzzer = ML_GreyboxFuzzer([seed_input], Mutator(), ml_schedule)
+    ml_fuzzer = ML_GreyboxFuzzer(programs[program_num]['seeds'], Mutator(), ml_schedule)
     start = time.time()
-    ml_fuzzer.runs(FunctionMLRunner(crash_me), trials=n)
+    ml_fuzzer.runs(FunctionMLRunner(programs[program_num]['function'], program_num), trials=n)
     end = time.time()
 
     print(ml_fuzzer.population)
