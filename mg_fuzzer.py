@@ -1,59 +1,51 @@
 import time
 
 from typing import Tuple, List, Callable, Set, Any
-from fuzzingbook.GreyboxFuzzer import Mutator, Seed, Sequence, AdvancedMutationFuzzer, AFLFastSchedule 
+from fuzzingbook.GreyboxFuzzer import Mutator, Seed, Sequence, CountingGreyboxFuzzer, AFLFastSchedule,getPathID
 from fuzzingbook.MutationFuzzer import FunctionRunner
 from fuzzingbook.Coverage import Coverage
 from utils import *
 from sample_programs.crash_me import crash_me
 
-Location = Tuple[str, int]
-
 class FunctionMutantsRunner(FunctionRunner):
     def run_function(self, inp: str) -> Any:
-        with Coverage() as cov:
-            try:
-                result = super().run_function(inp)
-            except Exception as exc:
-                self._coverage = cov.coverage()
-                raise exc
+        try:
+            result = super().run_function(inp)
+        except Exception as exc:
+            raise exc
 
-        self._coverage = cov.coverage()
+        self._coverage = run_mutants(inp)
         return result
 
-    def kill_coverage(self) -> Set[Location]:
+    def coverage(self) -> Set[int]:
         return self._coverage
+    
 
 class MutationAnalysisSchedule(AFLFastSchedule):
     def assignEnergy(self, population: Sequence[Seed]) -> None:
         """Assign exponential energy inversely proportional to path frequency"""
         for seed in population:
-            seed.energy = get_mutation_score(seed.data)
+            seed.energy = 1 / (self.path_frequency[getPathID(seed.coverage)] ** self.exponent)
 
-class Mutation_GreyboxFuzzer(AdvancedMutationFuzzer):
-    """MutationAnalysis-guided mutational fuzzing."""
+class Mutation_GreyboxFuzzer(CountingGreyboxFuzzer):
+    """Count how often individual paths are exercised."""
 
     def reset(self):
-        """Reset the initial population, seed index, coverage information"""
+        """Reset path frequency"""
         super().reset()
-        self.mutants_killed = set()
-        self.population = []  # population is filled during greybox fuzzing
+        self.schedule.path_frequency = {}
 
     def run(self, runner: FunctionMutantsRunner) -> Tuple[Any, str]:  # type: ignore
-        """Run function(inp) while tracking coverage.
-           If we reach new coverage,
-           add inp to population and its coverage to population_coverage
-        """
+        """Inform scheduler about path frequency"""
         result, outcome = super().run(runner)
-        new_kill_coverage = frozenset(runner.kill_coverage())
-        if new_kill_coverage not in self.mutants_killed:
-            # We have new coverage
-            seed = Seed(self.inp)
-            seed.coverage = runner.kill_coverage()
-            self.mutants_killed.add(new_kill_coverage)
-            self.population.append(seed)
 
-        return (result, outcome)
+        path_id = getPathID(runner.coverage())
+        if path_id not in self.schedule.path_frequency:
+            self.schedule.path_frequency[path_id] = 1
+        else:
+            self.schedule.path_frequency[path_id] += 1
+
+        return(result, outcome)
 
 if __name__ == "__main__":
     n = 10000

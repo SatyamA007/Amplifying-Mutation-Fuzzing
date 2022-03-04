@@ -16,25 +16,24 @@ def call_func(full_module_name, func_name, *argv):
         if isfunction(attribute) and attribute_name == func_name:
             attribute(*argv)
 
-def run_program(filename, s):
+def run_program_killed(filename, s):
     try:
         with ExpectTimeout(1):
             call_func('.'.join(directory.split('/')) + filename.strip('.py'), 'crash_me', s)
-            return True
+            return False
     except:
-        return False
-    return False
+        return True
+    return True
 
-def get_mutation_score(data):
+def run_mutants(data):
     total = len(os.listdir(directory))
-    un_detected = 0
-    for filename in os.listdir(directory):
+    _coverage = set()
+    for i,filename in enumerate(os.listdir(directory)):
         f = os.path.join(directory, filename)
         # checking if it is a file
         if os.path.isfile(f):
             with open(os.path.join(directory +filename)) as handler:
-                un_detected += run_program(filename, data)
+                if run_program_killed(filename, data):
+                    _coverage.add(i)
 
-    score = (total - un_detected) / total
-#     print(score, un_detected, total)
-    return score
+    return _coverage
