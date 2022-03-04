@@ -16,6 +16,8 @@ programs = {
     },
 }
 
+mute = True
+
 def directory(program_num:str):
     return 'sample_programs/'+programs[program_num]['name']+'/mutants/'
 
@@ -28,7 +30,7 @@ def call_func(full_module_name, func_name, *argv):
 
 def run_program_killed(filename, program_num, s):
     try:
-        with ExpectTimeout(1):
+        with ExpectTimeout(1, mute = mute):
             #print('.'.join(directory(program_num).split('/')) + filename.strip('.py'), programs[program_num]['name'], s)
             call_func('.'.join(directory(program_num).split('/')) + filename.strip('.py'), programs[program_num]['name'], s)
             return False
