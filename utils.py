@@ -2,6 +2,7 @@ import os
 import importlib
 
 from importlib import import_module
+from typing import Tuple
 from fuzzingbook.ExpectError import ExpectTimeout
 from inspect import isfunction
 from sample_programs.crash_me.crash_me import crash_me
@@ -20,7 +21,7 @@ programs = {
         'seeds':['2*(5+5*2)/3+(6/2+8)', '1*2+3', '1-5']
     },
 }
-
+BugID = Tuple[int,str]
 mute = True
 
 def directory(program_num:str):
@@ -36,12 +37,11 @@ def call_func(full_module_name, func_name, *argv):
 def run_program_killed(filename, program_num, s):
     try:
         with ExpectTimeout(1, mute = mute):
-            #print('.'.join(directory(program_num).split('/')) + filename.strip('.py'), programs[program_num]['name'], s)
             call_func('.'.join(directory(program_num).split('/')) + filename.strip('.py'), programs[program_num]['name'], s)
-            return False
-    except:
-        return True
-    return True
+            return 
+    except Exception as e:
+        return e.__class__.__name__
+    raise Exception('Exception not caught!!')
 
 def run_mutants(data, program_num = '1'):
     total = len(os.listdir(directory(program_num)))
@@ -51,7 +51,7 @@ def run_mutants(data, program_num = '1'):
         # checking if it is a file
         if os.path.isfile(f):
             with open(os.path.join(directory(program_num) +filename)) as handler:
-                if run_program_killed(filename, program_num ,data):
-                    _coverage.add(i)
-
+                exc = run_program_killed(filename, program_num ,data)
+                if exc: _coverage.add((i,exc))
+                
     return _coverage

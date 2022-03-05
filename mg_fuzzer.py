@@ -22,7 +22,7 @@ class FunctionMutantsRunner(FunctionRunner):
         self._coverage = run_mutants(inp,self.program_num)
         return result
 
-    def coverage(self) -> Set[int]:
+    def coverage(self) -> Set[BugID]:
         return self._coverage
     
 
