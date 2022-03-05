@@ -53,7 +53,7 @@ class Mutation_GreyboxFuzzer(CountingGreyboxFuzzer):
         return(result, outcome)
 
 if __name__ == "__main__":
-    program_num = '1'
+    program_num = '4'
     if len(sys.argv)>1:
         program_num = str(sys.argv[1])
 

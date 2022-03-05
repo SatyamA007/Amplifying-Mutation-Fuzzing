@@ -9,6 +9,7 @@ from pyrsistent import mutant
 from sample_programs.crash_me.crash_me import crash_me
 from sample_programs.balanced_parantheses.balanced_parantheses import balanced_parantheses
 from sample_programs.evaluate_expression.evaluate_expression import evaluate_expression
+from sample_programs.suffix_tree.suffix_tree import suffix_tree
 
 
 programs = {
@@ -20,6 +21,9 @@ programs = {
     },
     '3': { 'name': 'evaluate_expression', 'function': evaluate_expression,
         'seeds':['2*(5+5*2)/3+(6/2+8)', '1*2+3', '1-5'], 'codeLines': 50
+    },
+    '4': { 'name': 'suffix_tree', 'function': suffix_tree,
+        'seeds':['dogHasaPotato', 'Mans best friend is a man', 'catscoolinsteadofhotdog'], 'codeLines': 170
     },
 }
 
@@ -49,6 +53,7 @@ def run_mutants(data, program_num = '1'):
     total = len(os.listdir(directory(program_num)))
     _coverage = set()
     for i,filename in enumerate(os.listdir(directory(program_num))):
+        if(i>35): break
         f = os.path.join(directory(program_num), filename)
         # checking if it is a file
         if os.path.isfile(f):
