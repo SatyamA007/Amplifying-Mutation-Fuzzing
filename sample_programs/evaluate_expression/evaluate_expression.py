@@ -35,7 +35,8 @@ def evaluate_expression(s: str) -> int:
         return is_balanced
 
     if not checkExpression(s):
-        raise Exception('InvalidExpression')
+        return 0
+        # raise Exception('InvalidExpression')
 
     def calculate(s):
         """

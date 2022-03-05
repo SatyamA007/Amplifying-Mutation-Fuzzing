@@ -1,6 +1,10 @@
 import sys
 import time
+import json
+import os
+from numpy import arange
 
+from datetime import datetime
 from typing import Dict, Tuple, List, Callable, Set, Any
 from fuzzingbook.GreyboxFuzzer import Mutator, Seed, Sequence, CountingGreyboxFuzzer, AFLFastSchedule,getPathID
 from fuzzingbook.MutationFuzzer import FunctionRunner
@@ -91,7 +95,6 @@ class ML_GreyboxFuzzer(CountingGreyboxFuzzer):
 
         new_coverage = frozenset(runner.coverage()[0])
         new_mutants = frozenset(runner.coverage()[1])
-        
         if new_coverage not in self.coverages_seen or new_mutants not in self.mutants_seen:
             # We have new coverage
             seed = Seed_with_mutants(self.inp)
@@ -106,14 +109,35 @@ class ML_GreyboxFuzzer(CountingGreyboxFuzzer):
 
 if __name__ == "__main__":
     program_num = '1'
+    n = 10000
     if len(sys.argv)>1:
         program_num = str(sys.argv[1])
+    
+    save_data = []
+    for x1 in arange(1, 5.1, 0.3):
+        for x2 in arange(1, 5.1, 0.3):
+            ml_schedule = MLSchedule(x1, x2)
+            ml_fuzzer = ML_GreyboxFuzzer(programs[program_num]['seeds'], Mutator(), ml_schedule)
+            start = time.time()
+            ml_fuzzer.runs(FunctionMLRunner(programs[program_num]['function'], program_num), trials=n)
+            end = time.time()
 
-    n = 10000
-    ml_schedule = MLSchedule(5,5)
-    ml_fuzzer = ML_GreyboxFuzzer(programs[program_num]['seeds'], Mutator(), ml_schedule)
-    start = time.time()
-    ml_fuzzer.runs(FunctionMLRunner(programs[program_num]['function'], program_num), trials=n)
-    end = time.time()
+            coverage_score, linesCovered = coverageScore(ml_fuzzer, program_num)
+            mutation_score, mutantsKilled = mutationScore(ml_fuzzer, program_num)
+            entry = {
+                'x1': x1,
+                'x2': x2,
+                'linesCovered': list(linesCovered),
+                'coverageScore': coverage_score,
+                'mutantsKilled': list(mutantsKilled),
+                'mutationScore': mutation_score,
+                'score': score(coverage_score, mutation_score)
+            }
+            print(entry)
+            save_data.append(entry)
 
-    print(ml_fuzzer.population)
+    filename = datetime.now().strftime("%d-%m-%Y_%H-%M") + '.log'
+    save_file_path = os.path.join('sample_programs/'+programs[program_num]['name'], filename)
+    handler = open(save_file_path, 'w')
+    json.dump(save_data, handler)
+    handler.close()
