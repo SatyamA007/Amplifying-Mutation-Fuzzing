@@ -45,7 +45,6 @@ class Mutation_GreyboxFuzzer(CountingGreyboxFuzzer):
         result, outcome = super().run(runner)
 
         path_id = getPathID(runner.coverage())
-        print(runner.coverage())
         if path_id not in self.schedule.path_frequency:
             self.schedule.path_frequency[path_id] = 1
         else:
@@ -54,7 +53,7 @@ class Mutation_GreyboxFuzzer(CountingGreyboxFuzzer):
         return(result, outcome)
 
 if __name__ == "__main__":
-    program_num = '2'
+    program_num = '1'
     if len(sys.argv)>1:
         program_num = str(sys.argv[1])
 

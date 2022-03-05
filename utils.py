@@ -43,7 +43,7 @@ def run_program_killed(filename, program_num, s):
             return 
     except Exception as e:
         return e.__class__.__name__
-    raise Exception('Exception not caught!!')
+    raise Exception('Exception not caught! Please change line 245 of fuzzingbook.ExpectError to return False')
 
 def run_mutants(data, program_num = '1'):
     total = len(os.listdir(directory(program_num)))
