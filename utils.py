@@ -5,14 +5,19 @@ from importlib import import_module
 from fuzzingbook.ExpectError import ExpectTimeout
 from inspect import isfunction
 from sample_programs.crash_me.crash_me import crash_me
+from sample_programs.balanced_parantheses.balanced_parantheses import balanced_parantheses
+from sample_programs.evaluate_expression.evaluate_expression import evaluate_expression
 
 
 programs = {
     '1': { 'name': 'crash_me', 'function': crash_me,
         'seeds':['good']
     },
-    '2': { 'name': 'crash_me', 'function': crash_me,
-        'seeds':['good']
+    '2': { 'name': 'balanced_parantheses', 'function': balanced_parantheses,
+        'seeds':['({good[]})', '{[()()[]{()}}', '{[[[))}]{]']
+    },
+    '3': { 'name': 'evaluate_expression', 'function': evaluate_expression,
+        'seeds':['2*(5+5*2)/3+(6/2+8)', '1*2+3', '1-5']
     },
 }
 
