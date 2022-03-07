@@ -59,8 +59,10 @@ class MLSchedule(AFLFastSchedule):
     def assignEnergy(self, population: Sequence[Seed_with_mutants]) -> None:
         """Assign exponential energy inversely proportional to path frequency"""
         for seed in population:
-            seed.energy = 1 / (self.path_frequency[getPathID(seed.coverage)] ** self.exponent_x1)
-            seed.energy *= 1 / (self.mutant_frequency[getPathID(seed.mutants)] ** self.exponent_x2)
+            # seed.energy = 1 / (self.path_frequency[getPathID(seed.coverage)] ** self.exponent_x1)
+            # seed.energy *= 1 / (self.mutant_frequency[getPathID(seed.mutants)] ** self.exponent_x2)
+            seed.energy = 1 / (self.path_frequency[getPathID(seed.coverage)] ** self.exponent_x1 + \
+                                self.mutant_frequency[getPathID(seed.mutants)] ** self.exponent_x2)
     
 class ML_GreyboxFuzzer(CountingGreyboxFuzzer):
     """Count how often individual paths are exercised."""
@@ -122,8 +124,8 @@ if __name__ == "__main__":
             ml_fuzzer.runs(FunctionMLRunner(programs[program_num]['function'], program_num), trials=n)
             end = time.time()
 
-            coverage_score, linesCovered = coverageScore(ml_fuzzer, program_num)
-            mutation_score, mutantsKilled = mutationScore(ml_fuzzer, program_num)
+            coverage_score, linesCovered = coverageScore2(ml_fuzzer, program_num)
+            mutation_score, mutantsKilled = mutationScore2(ml_fuzzer, program_num)
             entry = {
                 'x1': x1,
                 'x2': x2,
