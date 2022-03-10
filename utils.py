@@ -53,7 +53,7 @@ def run_mutants(data, program_num = '1'):
     total = len(os.listdir(directory(program_num)))
     _coverage = set()
     for i,filename in enumerate(os.listdir(directory(program_num))):
-        # if(i>40): break
+        if(i>40): break
         f = os.path.join(directory(program_num), filename)
         # checking if it is a file
         if os.path.isfile(f):
