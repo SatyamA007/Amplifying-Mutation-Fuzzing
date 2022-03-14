@@ -7,8 +7,9 @@ from fuzzingbook.MutationFuzzer import FunctionRunner
 from fuzzingbook.Coverage import Coverage
 from utils import *
 
+
 class FunctionMutantsRunner(FunctionRunner):
-    def __init__(self, function: Callable, program_num:str = '1') -> None:
+    def __init__(self, function:Callable, program_num:str = '1') -> None:
         """Initialize.  `function` is a function to be executed"""
         self.function = function
         self.program_num = program_num
@@ -42,7 +43,7 @@ class Mutation_GreyboxFuzzer(CountingGreyboxFuzzer):
 
     def run(self, runner: FunctionMutantsRunner) -> Tuple[Any, str]:  # type: ignore
         """Inform scheduler about path frequency"""
-        result, outcome = super().run(runner)
+        result, outcome = self.super_runer(runner)
 
         path_id = getPathID(runner.coverage())
         if path_id not in self.schedule.path_frequency:
@@ -51,6 +52,22 @@ class Mutation_GreyboxFuzzer(CountingGreyboxFuzzer):
             self.schedule.path_frequency[path_id] += 1
 
         return(result, outcome)
+
+    def super_runer(self, runner: FunctionMutantsRunner) -> Tuple[Any, str]:  # type: ignore
+        """Run function(inp) while tracking coverage.
+           If we reach new coverage,
+           add inp to population and its coverage to population_coverage
+        """
+        result, outcome = runner.run(self.fuzz())
+        new_coverage = frozenset(runner.coverage())
+        if new_coverage not in self.coverages_seen:
+            # We have new coverage
+            seed = Seed(self.inp)
+            seed.coverage = runner.coverage()
+            self.coverages_seen.add(new_coverage)
+            self.population.append(seed)
+
+        return (result, outcome)
 
 if __name__ == "__main__":
     program_num = '4'
@@ -65,3 +82,6 @@ if __name__ == "__main__":
     end = time.time()
 
     print(mutant_fuzzer.population)
+
+    coverageScore, mutationScore = coverageScore2(mutant_fuzzer, program_num), mutationScore2(mutant_fuzzer, program_num)
+    print(coverageScore[0], mutationScore[0], score(coverageScore[0], mutationScore[0]))
